@@ -108,13 +108,31 @@ namespace ProjectTemplate
         }
 
         [WebMethod(EnableSession = true)]
-        public string AddPost(string text, string category = "")
+        public string AddPost(string text, string category)
         {
             Models.WhistleObjects PostInfo = new Models.WhistleObjects();
             PostInfo.Category = category;
             PostInfo.PostText = text;
 
             //flag as an array
+
+            string sqlConnectString = getConString();
+            string sqlStatement = "INSERT INTO Posts (Category, Text) VALUES(@category,@text)";
+            
+            //set up our connection object to be ready to use our connection string
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            //set up our command object to use our connection, and our query
+            MySqlCommand sqlCommand = new MySqlCommand(sqlStatement, sqlConnection);
+
+
+            sqlCommand.Parameters.AddWithValue("@category", HttpUtility.UrlDecode(category));
+            sqlCommand.Parameters.AddWithValue("@text", HttpUtility.UrlDecode(text));
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+
+            DataTable sqlDt = new DataTable();
+            //here we go filling it!
+            sqlDa.Fill(sqlDt);
 
             return "Post added";
         }
