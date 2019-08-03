@@ -108,7 +108,7 @@ namespace ProjectTemplate
         }
 
         [WebMethod(EnableSession = true)]
-        public string AddPost(string text, string category)
+        public string AddPost(string text, string category) //fixed, no errors when connecting to DB
         {
             Models.WhistleObjects PostInfo = new Models.WhistleObjects();
             PostInfo.Category = category;
@@ -117,7 +117,7 @@ namespace ProjectTemplate
             //flag as an array
 
             string sqlConnectString = getConString();
-            string sqlStatement = "INSERT INTO Posts (Category, Text) VALUES(@category,@text)";
+            string sqlStatement = "INSERT INTO Posts (Category, Text) VALUES(@category, @text)";
             
             //set up our connection object to be ready to use our connection string
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
