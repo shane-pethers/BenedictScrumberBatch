@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8" />
-	<title>Whistle.</title>
-	<!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Whistle.</title>
+    <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-	<!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
+    <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
     <script type="text/javascript">
         function TestButtonHandler() {
             var webMethod = "ProjectServices.asmx/TestConnection";
@@ -102,11 +102,35 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    var json = JSON.parse(msg.d);
+                    var json = JSON.parse(JSON.stringify(msg.d));
+                    $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<tr><td>' + obj.PostText + ' </td> <td>' + obj.Category + '</td> </tr>'
-                        $("#location").append(row);
-                    }); 
+                        var row = '<div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button></div>'
+                        $("#postOutput").append(row);
+                    });
+                },
+                error: function (e) {
+                    alert("this code will only execute if javascript is unable to access the webservice");
+                }
+            });
+
+        }
+
+        function Vote(postid) {
+            var Category = document.getElementById("searchCategory").value;
+
+            var webMethod = "ProjectServices.asmx/UpvotePost";
+            var parameters = "{\"id\":\"" + encodeURI(postid) + "\"}";
+
+            //jQuery ajax method
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert(msg.d);
                 },
                 error: function (e) {
                     alert("this code will only execute if javascript is unable to access the webservice");
@@ -116,29 +140,57 @@
         }
 
     </script>
-	<!--END OF YOUR OWN JAVASCRIPT-->
-
-	<!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
-	<style>
-
-	</style>
-	<!--END OF YOUR OWN CSS-->
-</head >
+    <!--END OF YOUR OWN JAVASCRIPT-->
+    <!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
+    <link rel="stylesheet" href="Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="Content/bootstrap-theme.min.css" />
+    <link href="Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <!--END OF YOUR OWN CSS-->
+</head>
 <body>
-	<button onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
-    <br/>
-    <input type="text" id="logonId" /><input type="text" id="logonPass" /><button onclick="javascript: logon();">Log On!</Button>
+    <div class="container">
+        <div class="body-content">
+            <div class="row">
+                <button class="btn btn-primary" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
+            </div>
+            <br />
+            <div class="row">
+                <input type="text" class="form-control" id="logonId" placeholder="Username" /><input type="text" class="form-control" id="logonPass" placeholder="Password" /><button class="btn btn-primary" onclick="javascript: logon();">Log On!</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <textarea class="form-control" id="postText" placeholder="Please enter your feedback details here..." aria-label="With textarea"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="categorySelection">Select a Category</label>
+                    <select class="form-control" id="categorySelection">
+                        <option>Training & Development</option>
+                        <option>Environment & Culture</option>
+                        <option>Leadership & Management</option>
+                        <option>Technology & Systems</option>
+                        <option selected>Other</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="javascript: MakePost();">Create Post</button>
+            </form>
+            <div class="row">
+                <label for="searchCategory">Select a Category</label>
+                <select class="form-control" id="searchCategory">
+                    <option>Training & Development</option>
+                    <option>Environment & Culture</option>
+                    <option>Leadership & Management</option>
+                    <option>Technology & Systems</option>
+                    <option selected>Other</option>
+                </select>
+                <button class="btn btn-primary" onclick="javascript: SearchPost();">Search post</button>
 
-    <input type="text" id="postText" /><input type="text" id="categorySelection"/><button onclick="javascript: MakePost();">Create Post</button>
-
-    <input type="text" id="searchCategory" /><button onclick="javascript: SearchPost();">Search post</button>
-
-    <table id="location">
-        <tr>
-            <th>Category</th>
-            <th>Text</th>
-        </tr>
-    </table>
-
+                <div id="postOutput">
+                    
+                </div>
+            </div>
+    </div>
+        </div>
 </body>
-</html >
+</html>

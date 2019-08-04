@@ -7,6 +7,7 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Data;
 
+
 namespace ProjectTemplate
 {
     [WebService(Namespace = "http://tempuri.org/")]
@@ -147,7 +148,7 @@ namespace ProjectTemplate
 
                 string sqlConnectString = getConString();
             //requests just have active set to 0
-            string sqlSelect = "SELECT * FROM Posts WHERE Category=@category";
+            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts WHERE Category=@category";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
@@ -162,14 +163,38 @@ namespace ProjectTemplate
             {
                 listOfPosts.Add(new Models.WhistleObjects
                 { 
-                    Category = sqlDt.Rows[i]["category"].ToString(),
+                    Category = sqlDt.Rows[i]["Category"].ToString(),
                     PostText = sqlDt.Rows[i]["Text"].ToString(),
                     Flag = Int16.Parse(sqlDt.Rows[i]["Flag"].ToString()),
-                    PostVotes = Int32.Parse(sqlDt.Rows[i]["votes"].ToString())
+                    PostVotes = Int32.Parse(sqlDt.Rows[i]["Votes"].ToString()),
+                    PostID = Int32.Parse(sqlDt.Rows[i]["PostID"].ToString())
                 });
             }
             //convert the list of accounts to an array and return!
             return listOfPosts.ToArray();
+        }
+
+        [WebMethod(EnableSession = true)]
+        public string UpvotePost(int id)
+        {//LOGIC: get postid and upvote it
+            Models.WhistleObjects PostInfo = new Models.WhistleObjects();
+            PostInfo.PostID = id;
+
+            DataTable sqlDt = new DataTable();
+
+            string sqlConnectString = getConString();
+            //requests just have active set to 0
+            string sqlUpdate = "UPDATE Posts SET Votes = Votes + 1 WHERE PostID=@id";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlUpdate, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@id", HttpUtility.UrlDecode(id.ToString()));
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            sqlDa.Fill(sqlDt);
+
+            return "Post upvoted!";
         }
 
     }
