@@ -85,7 +85,37 @@
                     alert("this code will only execute if javascript is unable to access the webservice");
                 }
             });
-        }</script>
+
+        }
+
+        function SearchPost() {
+            var Category = document.getElementById("searchCategory").value;
+
+            var webMethod = "ProjectServices.asmx/GetPosts";
+            var parameters = "{\"category\":\"" + encodeURI(Category) + "\"}";
+
+            //jQuery ajax method
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    var json = JSON.parse(msg.d);
+                    $.each(json, function (index, obj) {
+                        var row = '<tr><td>' + obj.PostText + ' </td> <td>' + obj.Category + '</td> </tr>'
+                        $("#location").append(row);
+                    }); 
+                },
+                error: function (e) {
+                    alert("this code will only execute if javascript is unable to access the webservice");
+                }
+            });
+
+        }
+
+    </script>
 	<!--END OF YOUR OWN JAVASCRIPT-->
 
 	<!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
@@ -100,5 +130,15 @@
     <input type="text" id="logonId" /><input type="text" id="logonPass" /><button onclick="javascript: logon();">Log On!</Button>
 
     <input type="text" id="postText" /><input type="text" id="categorySelection"/><button onclick="javascript: MakePost();">Create Post</button>
+
+    <input type="text" id="searchCategory" /><button onclick="javascript: SearchPost();">Search post</button>
+
+    <table id="location">
+        <tr>
+            <th>Category</th>
+            <th>Text</th>
+        </tr>
+    </table>
+
 </body>
 </html >

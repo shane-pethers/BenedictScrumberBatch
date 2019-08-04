@@ -137,7 +137,40 @@ namespace ProjectTemplate
             return "Post added";
         }
 
+        [WebMethod(EnableSession = true)]
+        public Models.WhistleObjects[] GetPosts(string category)
+        {//LOGIC: get all account requests and return them!
+            Models.WhistleObjects PostInfo = new Models.WhistleObjects();
+            PostInfo.Category = category;
+            
+                DataTable sqlDt = new DataTable();
 
+                string sqlConnectString = getConString();
+            //requests just have active set to 0
+            string sqlSelect = "SELECT * FROM Posts WHERE Category=@category";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@category", HttpUtility.UrlDecode(category));
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            sqlDa.Fill(sqlDt);
+
+            List<Models.WhistleObjects> listOfPosts = new List<Models.WhistleObjects>();
+            for (int i = 0; i < sqlDt.Rows.Count; i++)
+            {
+                listOfPosts.Add(new Models.WhistleObjects
+                { 
+                    Category = sqlDt.Rows[i]["category"].ToString(),
+                    PostText = sqlDt.Rows[i]["Text"].ToString(),
+                    Flag = Int16.Parse(sqlDt.Rows[i]["Flag"].ToString()),
+                    PostVotes = Int32.Parse(sqlDt.Rows[i]["votes"].ToString())
+                });
+            }
+            //convert the list of accounts to an array and return!
+            return listOfPosts.ToArray();
+        }
 
     }
 }
