@@ -184,7 +184,7 @@ namespace ProjectTemplate
 
             string sqlConnectString = getConString();
             //requests just have active set to 0
-            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID, COUNT(*) FROM Posts Group By Category ORDER BY Votes DESC limit 5";
+            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts Category ORDER BY Votes DESC limit 5";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
