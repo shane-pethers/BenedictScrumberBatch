@@ -148,7 +148,7 @@ namespace ProjectTemplate
 
                 string sqlConnectString = getConString();
             //requests just have active set to 0
-            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts WHERE Category=@category";
+            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts WHERE Category=@category ORDER BY Votes DESC";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
@@ -163,6 +163,42 @@ namespace ProjectTemplate
             {
                 listOfPosts.Add(new Models.WhistleObjects
                 { 
+                    Category = sqlDt.Rows[i]["Category"].ToString(),
+                    PostText = sqlDt.Rows[i]["Text"].ToString(),
+                    Flag = Int16.Parse(sqlDt.Rows[i]["Flag"].ToString()),
+                    PostVotes = Int32.Parse(sqlDt.Rows[i]["Votes"].ToString()),
+                    PostID = Int32.Parse(sqlDt.Rows[i]["PostID"].ToString())
+                });
+            }
+            //convert the list of accounts to an array and return!
+            return listOfPosts.ToArray();
+        }
+
+        [WebMethod(EnableSession = true)]
+        public Models.WhistleObjects[] TopPosts()
+        {//LOGIC: get all account requests and return them!
+            Models.WhistleObjects PostInfo = new Models.WhistleObjects();
+            //PostInfo.Category = category;
+
+            DataTable sqlDt = new DataTable();
+
+            string sqlConnectString = getConString();
+            //requests just have active set to 0
+            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID, COUNT(*) FROM Posts Group By Category ORDER BY Votes DESC limit 5";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            //sqlCommand.Parameters.AddWithValue("@category", HttpUtility.UrlDecode(category));
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            sqlDa.Fill(sqlDt);
+
+            List<Models.WhistleObjects> listOfPosts = new List<Models.WhistleObjects>();
+            for (int i = 0; i < sqlDt.Rows.Count; i++)
+            {
+                listOfPosts.Add(new Models.WhistleObjects
+                {
                     Category = sqlDt.Rows[i]["Category"].ToString(),
                     PostText = sqlDt.Rows[i]["Text"].ToString(),
                     Flag = Int16.Parse(sqlDt.Rows[i]["Flag"].ToString()),
