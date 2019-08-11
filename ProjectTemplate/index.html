@@ -107,6 +107,7 @@
                     $.each(json, function (index, obj) {
                         var row = '<div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button></div>'
                         $("#postOutput").append(row);
+                        $("#btn btn-primary").attr("disabled", true);
                     });
                 },
                 error: function (e) {
@@ -139,6 +140,28 @@
 
         }
 
+        function Flag(postid) {
+            var Category = document.getElementById("searchCategory").value;
+
+            var webMethod = "ProjectServices.asmx/FlagPost";
+            var parameters = "{\"id\":\"" + encodeURI(postid) + "\"}";
+
+            //jQuery ajax method
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert(msg.d);
+                },
+                error: function (e) {
+                    alert("this code will only execute if javascript is unable to access the webservice");
+                }
+            });
+        }
+
         function HomePosts() {
 
             var webMethod = "ProjectServices.asmx/TopPosts";
@@ -153,7 +176,7 @@
                     var json = JSON.parse(JSON.stringify(msg.d));
                     $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button></div>'
+                        var row = '<div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" id="Post" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button><button class="btn btn-primary" onclick="Flag(' + obj.PostID + ');"></button>Flag!</div>'
                         $("#postOutput").append(row);
                     });
                 },
@@ -163,6 +186,7 @@
             });
 
         }
+        
 
     </script>
     <!--END OF YOUR OWN JAVASCRIPT-->

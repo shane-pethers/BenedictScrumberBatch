@@ -270,5 +270,29 @@ namespace ProjectTemplate
         }
 
 
+        [WebMethod(EnableSession = true)]
+        public string FlagPost(int id)
+        {//LOGIC: get postid and upvote it
+            Models.WhistleObjects PostInfo = new Models.WhistleObjects();
+            PostInfo.PostID = id;
+
+            DataTable sqlDt = new DataTable();
+
+            string sqlConnectString = getConString();
+            //requests just have active set to 0
+            string sqlUpdate = "UPDATE Posts SET Flag = Flag + 1 WHERE PostID=@id";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlUpdate, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@id", HttpUtility.UrlDecode(id.ToString()));
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            sqlDa.Fill(sqlDt);
+
+            return "Post Flagged";
+        }
+
+
     }
 }
