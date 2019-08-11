@@ -16,3 +16,14 @@ textarea {
     max-width: 280px;
 }
 
+.card {
+    margin: auto;
+    padding: 10px;
+}
+
+.btn .btn-primary {
+    margin: 5px;
+}
+
+
+

@@ -28,7 +28,8 @@ namespace ProjectTemplate
         ////////////////////////////////////////////////////////////////////////
         ///call this method anywhere that you need the connection string!
         ////////////////////////////////////////////////////////////////////////
-        private string getConString() {
+        private string getConString()
+        {
             return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName + "; UID=" + dbID + "; PASSWORD=" + dbPass;
         }
         ////////////////////////////////////////////////////////////////////////
@@ -119,7 +120,7 @@ namespace ProjectTemplate
 
             string sqlConnectString = getConString();
             string sqlStatement = "INSERT INTO Posts (Category, Text) VALUES(@category, @text)";
-            
+
             //set up our connection object to be ready to use our connection string
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             //set up our command object to use our connection, and our query
@@ -143,10 +144,10 @@ namespace ProjectTemplate
         {//LOGIC: get all account requests and return them!
             Models.WhistleObjects PostInfo = new Models.WhistleObjects();
             PostInfo.Category = category;
-            
-                DataTable sqlDt = new DataTable();
 
-                string sqlConnectString = getConString();
+            DataTable sqlDt = new DataTable();
+
+            string sqlConnectString = getConString();
             //requests just have active set to 0
             string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts WHERE Category=@category ORDER BY Votes DESC";
 
@@ -162,7 +163,7 @@ namespace ProjectTemplate
             for (int i = 0; i < sqlDt.Rows.Count; i++)
             {
                 listOfPosts.Add(new Models.WhistleObjects
-                { 
+                {
                     Category = sqlDt.Rows[i]["Category"].ToString(),
                     PostText = sqlDt.Rows[i]["Text"].ToString(),
                     Flag = Int16.Parse(sqlDt.Rows[i]["Flag"].ToString()),
@@ -184,7 +185,7 @@ namespace ProjectTemplate
 
             string sqlConnectString = getConString();
             //requests just have active set to 0
-            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts Category ORDER BY Votes DESC limit 5";
+            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts ORDER BY Votes DESC limit 5";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
@@ -280,7 +281,7 @@ namespace ProjectTemplate
 
             string sqlConnectString = getConString();
             //requests just have active set to 0
-            string sqlUpdate = "UPDATE Posts SET Flag = Flag + 1 WHERE PostID=@id";
+            string sqlUpdate = "UPDATE Posts SET Flag = 1 WHERE PostID=@id";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlUpdate, sqlConnection);
@@ -291,6 +292,63 @@ namespace ProjectTemplate
             sqlDa.Fill(sqlDt);
 
             return "Post Flagged";
+        }
+
+        [WebMethod(EnableSession = true)]
+        public Models.WhistleObjects[] FlaggedPosts()
+        {//LOGIC: get all account requests and return them!
+            Models.WhistleObjects PostInfo = new Models.WhistleObjects();
+
+
+            DataTable sqlDt = new DataTable();
+
+            string sqlConnectString = getConString();
+            //requests just have active set to 0
+            string sqlSelect = "SELECT Text, Category, Flag, Votes, PostID FROM Posts WHERE Flag=1";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            sqlDa.Fill(sqlDt);
+
+            List<Models.WhistleObjects> listOfPosts = new List<Models.WhistleObjects>();
+            for (int i = 0; i < sqlDt.Rows.Count; i++)
+            {
+                listOfPosts.Add(new Models.WhistleObjects
+                {
+                    Category = sqlDt.Rows[i]["Category"].ToString(),
+                    PostText = sqlDt.Rows[i]["Text"].ToString(),
+                    Flag = Int16.Parse(sqlDt.Rows[i]["Flag"].ToString()),
+                    PostVotes = Int32.Parse(sqlDt.Rows[i]["Votes"].ToString()),
+                    PostID = Int32.Parse(sqlDt.Rows[i]["PostID"].ToString())
+                });
+            }
+            //convert the list of accounts to an array and return!
+            return listOfPosts.ToArray();
+        }
+
+        [WebMethod(EnableSession = true)]
+        public string DeletePost(int id)
+        {//LOGIC: get postid and upvote it
+            Models.WhistleObjects PostInfo = new Models.WhistleObjects();
+            PostInfo.PostID = id;
+
+            DataTable sqlDt = new DataTable();
+
+            string sqlConnectString = getConString();
+            //requests just have active set to 0
+            string sqlUpdate = "Delete From Posts WHERE PostID=@id";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlUpdate, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@id", HttpUtility.UrlDecode(id.ToString()));
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            sqlDa.Fill(sqlDt);
+
+            return "Post Deleted";
         }
 
 

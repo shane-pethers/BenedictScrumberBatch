@@ -39,7 +39,7 @@
             var text = document.getElementById("TextSearch").value;
 
             var webMethod = "ProjectServices.asmx/GetPostsbyText";
-            var parameters = "{\"category\":\"" + encodeURI(text) + "\"}";
+            var parameters = "{\"postText\":\"" + encodeURI(text) + "\"}";
 
             //jQuery ajax method
             $.ajax({
@@ -52,12 +52,15 @@
                     var json = JSON.parse(JSON.stringify(msg.d));
                     $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button></div>'
+                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" id="Post" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button><button class="btn btn-primary" onclick="Flag(' + obj.PostID + ');">Flag!</button></div></div>';
                         $("#postOutput").append(row);
                     });
+
+                    console.log(msg);
                 },
                 error: function (e) {
-                    alert("this code will only execute if javascript is unable to access the webservice");
+                    //alert("this code will only execute if javascript is unable to access the webservice");
+                    console.log(e);
                 }
             });
 
@@ -66,6 +69,7 @@
 
     </script>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css" integrity="sha384-wxqG4glGB3nlqX0bi23nmgwCSjWIW13BdLUEYC4VIMehfbcro/ATkyDsF/AbIOVe" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
