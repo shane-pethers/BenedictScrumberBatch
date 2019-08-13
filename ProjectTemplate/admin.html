@@ -18,7 +18,7 @@
                     var json = JSON.parse(JSON.stringify(msg.d));
                     $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-danger" onclick="Delete(' + obj.PostID + ');">Delete Post</button></div></div>'
+                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " </br><h6>Upvotes: " + obj.PostVotes + '</h6></p><button class="btn btn-danger" onclick="Delete(' + obj.PostID + ');">Delete Post</button></div></div>'
                         $("#postOutput").append(row);
                     });
                 },
@@ -59,7 +59,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <!--END OF YOUR OWN CSS-->
 </head>
-<body onload="javascript: FlaggedPosts();">
+<body>
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -91,24 +91,18 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="login.html">Log In</a>
+                                 
                             </li>
                         </ul>
                         <form class="form-inline my-2 my-lg-0">
                             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="TextSearch">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="javascript: SearchPostText();">Search</button>
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="javascript: SearchPostText();">Search</button>
                         </form>
                     </div>
                 </nav>
             </div>
         </div>
         <div class="body-content">
-            <div class="row">
-                <div class="col-12">
-                    <button class="btn btn-primary" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
-                </div>
-            </div>
-            <br />
             <div class="row">
                 <div class="col-12">
                     <div id="postOutput">
@@ -118,5 +112,10 @@
             </div>
         </div>
         </div>
+    <script>
+        $(document).ready(function () {
+            FlaggedPosts();
+        });
+    </script>
 </body>
 </html>

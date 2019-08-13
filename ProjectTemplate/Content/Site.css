@@ -14,17 +14,20 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 100% !important;
 }
 
 .card {
-    margin: auto;
-    padding: 10px;
+    margin: 15px !important;
+    padding: 10px !important;
 }
 
-.btn .btn-primary {
-    margin: 5px;
+.btn {
+    margin: 5px !important;
 }
 
+button {
+    margin: 5px !important;
+}
 
 

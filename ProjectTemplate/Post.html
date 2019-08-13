@@ -75,36 +75,38 @@
                                     <a class="dropdown-item" href="Other.html">Other</a>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="login.html">Log In</a>
-                            </li>
                         </ul>
                         <form class="form-inline my-2 my-lg-0">
                             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="TextSearch">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="javascript: SearchPostText();">Search</button>
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="javascript: SearchPostText();">Search</button>
                         </form>
                     </div>
                 </nav>
             </div>
         </div>
-        <br/>
-        <form>
-            <div class="form-group">
-                <textarea class="form-control" id="postText" placeholder="Please enter your feedback details here..." aria-label="With textarea"></textarea>
+        <div class="row">
+            <div class="col-12">
+                <br />
+                <form>
+                    <div class="form-group">
+                        <textarea class="form-control" id="postText" placeholder="Please enter your feedback details here..." aria-label="With textarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="categorySelection">Select a Category</label>
+                        <select class="form-control" id="categorySelection">
+                            <option>Training & Development</option>
+                            <option>Environment & Culture</option>
+                            <option>Leadership & Management</option>
+                            <option>Technology & Systems</option>
+                            <option selected>Other</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="javascript: MakePost();">Create Post</button>
+                </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="categorySelection">Select a Category</label>
-                <select class="form-control" id="categorySelection">
-                    <option>Training & Development</option>
-                    <option>Environment & Culture</option>
-                    <option>Leadership & Management</option>
-                    <option>Technology & Systems</option>
-                    <option selected>Other</option>
-                </select>
+
             </div>
-            <button class="btn btn-primary" onclick="javascript: MakePost();">Create Post</button>
-        </form>
-    </div>
 
 </body>
 </html>

@@ -24,7 +24,7 @@
                     var json = JSON.parse(JSON.stringify(msg.d));
                     $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" id="Post" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button><button class="btn btn-primary" onclick="Flag(' + obj.PostID + ');">Flag!</button></div></div>';
+                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " </br><h6>Upvotes: " + obj.PostVotes + '</h6></p><button class="btn btn-info" id="Post" onclick="javascript: Vote(' + obj.PostID + ');"><i class="fas fa-chevron-circle-up"></i> Vote Up</button><button class="btn btn-info" onclick="Flag(' + obj.PostID + ');"><i class="fas fa-flag"></i></button></div></div>';
                         $("#postOutput").append(row);
                     });
                 },
@@ -52,7 +52,7 @@
                     var json = JSON.parse(JSON.stringify(msg.d));
                     $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" id="Post" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button><button class="btn btn-primary" onclick="Flag(' + obj.PostID + ');">Flag!</button></div></div>';
+                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " </br><h6>Upvotes: " + obj.PostVotes + '</h6></p><button class="btn btn-info" id="Post" onclick="javascript: Vote(' + obj.PostID + ');"><i class="fas fa-chevron-circle-up"></i> Vote Up</button><button class="btn btn-info" onclick="Flag(' + obj.PostID + ');"><i class="fas fa-flag"></i></button></div></div>';
                         $("#postOutput").append(row);
                     });
 
@@ -64,6 +64,48 @@
                 }
             });
 
+        }
+        function Vote(postid) {
+
+            var webMethod = "ProjectServices.asmx/UpvotePost";
+            var parameters = "{\"id\":\"" + encodeURI(postid) + "\"}";
+
+            //jQuery ajax method
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert(msg.d);
+                },
+                error: function (e) {
+                    alert("this code will only execute if javascript is unable to access the webservice");
+                }
+            });
+
+        }
+
+        function Flag(postid) {
+
+            var webMethod = "ProjectServices.asmx/FlagPost";
+            var parameters = "{\"id\":\"" + encodeURI(postid) + "\"}";
+
+            //jQuery ajax method
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert(msg.d);
+                },
+                error: function (e) {
+                    alert("this code will only execute if javascript is unable to access the webservice");
+                }
+            });
         }
 
 
@@ -78,7 +120,7 @@
 </head>
 
 <body onload="javascript: SearchPost();">
-    <div class="Container">
+    <div class="container">
         <div class="row">
             <div class="col-12">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -108,13 +150,10 @@
                                     <a class="dropdown-item" href="Other.html">Other</a>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="login.html">Log In</a>
-                            </li>
                         </ul>
                         <form class="form-inline my-2 my-lg-0">
                             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="TextSearch">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="javascript: SearchPostText();">Search</button>
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="javascript: SearchPostText();">Search</button>
                         </form>
                     </div>
                 </nav>

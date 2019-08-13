@@ -29,8 +29,36 @@
             });
         }
 
+        function logon() {
+            var id = document.getElementById("logonId").value;
+            var pass = document.getElementById("logonPass").value;
+
+            var webMethod = "ProjectServices.asmx/LogOn";
+            var parameters = "{\"uid\":\"" + encodeURI(id) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
+
+            //jQuery ajax method
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    var responseFromServer = msg.d;
+                    if (responseFromServer == true) {
+                        alert("logged in!");
+                    }
+                    else {
+                        alert("bad credentials");
+                    }
+                },
+                error: function (e) {
+                    alert("this code will only execute if javascript is unable to access the webservice");
+                }
+            });
+        }
+
         function Vote(postid) {
-            var Category = document.getElementById("searchCategory").value;
 
             var webMethod = "ProjectServices.asmx/UpvotePost";
             var parameters = "{\"id\":\"" + encodeURI(postid) + "\"}";
@@ -87,7 +115,7 @@
                     var json = JSON.parse(JSON.stringify(msg.d));
                     $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" id="Post" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button><button class="btn btn-primary" onclick="Flag(' + obj.PostID + ');">Flag!</button></div></div>';
+                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " </br><h6>Upvotes: " + obj.PostVotes + '</h6></p><button class="btn btn-info" id="Post" onclick="javascript: Vote(' + obj.PostID + ');"><i class="fas fa-chevron-circle-up"></i> Vote Up</button><button class="btn btn-info" onclick="Flag(' + obj.PostID + ');"><i class="fas fa-flag"></i></button></div></div>';
                         $("#postOutput").append(row);
                     });
                 },
@@ -111,11 +139,11 @@
                 data: parameters,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (msg) {            
+                success: function (msg) {
                     var json = JSON.parse(JSON.stringify(msg.d));
                     $("#postOutput").empty();
                     $.each(json, function (index, obj) {
-                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " " + obj.PostVotes + '</p><button class="btn btn-primary" id="Post" onclick="javascript: Vote(' + obj.PostID + ');">Yes!</button><button class="btn btn-primary" onclick="Flag(' + obj.PostID + ');">Flag!</button></div></div>';
+                        var row = '<div class="card"><div class="card-body"><p class="card-text"><b>' + obj.Category + "</b>: " + obj.PostText + " </br><h6>Upvotes: " + obj.PostVotes + '</h6></p><button class="btn btn-info" id="Post" onclick="javascript: Vote(' + obj.PostID + ');"><i class="fas fa-chevron-circle-up"></i> Vote Up</button><button class="btn btn-info" onclick="Flag(' + obj.PostID + ');"><i class="fas fa-flag"></i></button></div></div>';
                         $("#postOutput").append(row);
                     });
 
@@ -142,7 +170,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <!--END OF YOUR OWN CSS-->
 </head>
-<body <!--onload="javascript: HomePosts();"-->
+<body>
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -151,7 +179,6 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
@@ -173,18 +200,18 @@
                                     <a class="dropdown-item" href="Other.html">Other</a>
                                 </div>
                             </li>
-                            <!--Modal: Login Form-->
+<!--Modal: Login Form-->
                             <div class="modal fade" id="modalLoginAvatar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog cascading-modal modal-avatar modal-sm" role="document">
-                                    <!--Content-->
+<!--Content-->
                                     <div class="modal-content">
 
-                                        <!--Header-->
+<!--Header-->
                                         <div class="modal-header">
                                             <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%281%29.jpg" alt="avatar" class="rounded-circle img-responsive">
                                         </div>
-                                        <!--Body-->
+<!--Body-->
                                         <div class="modal-body text-center mb-1">
 
                                             <h5 class="mt-1 mb-2">Jane Doe</h5>
@@ -195,43 +222,37 @@
                                             </div>
 
                                             <div class="text-center mt-4">
-                                                <button class="btn btn-cyan mt-1" href ="admin.html" >
-                                                    Login <i class="fas fa-sign-in ml-1"></i>
+                                                <button class="btn btn-cyan mt-1" href="admin.html" onclick="javascript: logon();">
+                                                    Log In <i class="fas fa-sign-in ml-1"></i>
                                                 </button>
                                             </div>
                                         </div>
 
                                     </div>
-                                    <!--/.Content-->
+<!--/.Content-->
                                 </div>
                             </div>
-                            <!--Modal: Login with Avatar Form-->
-
-                            <div class="text-center">
-                                <a href="" class="btn btn-default btn-rounded btn-cyan" data-toggle="modal" data-target="#modalLoginAvatar">
-                                    Login
+<!--Modal: Login with Avatar Form-->
+                            <li class="nav-item">
+                                <a class="nav-link" href="" data-toggle="modal" data-target="#modalLoginAvatar">
+                                    Log In
                                 </a>
-                            </div>
-
-                            <!-- Modal -->
                             </li>
+
+<!-- Modal -->
                         </ul>
-                        </ul>
-                        </ul>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="TextSearch">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="javascript: SearchPostText();">Search</button>
-                        </form>
                     </div>
+
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="TextSearch">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="javascript: SearchPostText();">Search</button>
+                    </form>
                 </nav>
+                    </div>
+
             </div>
-        </div>
         <div class="body-content">
-            <div class="row">
-                <div class="col-12">
-                    <button class="btn btn-primary" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
-                </div>
-            </div>
             <br />
             <div class="row">
                 <div class="col-12">
