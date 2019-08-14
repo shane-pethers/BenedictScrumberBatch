@@ -1,2 +1,2 @@
-# ProjectTemplate
-copy this code into your own repository, and use it for your project as you see fit!
+# Whistle.
+This is a web-hosted system designed to allow for anonymous user feedback in a professional context that other users can vote on to encourage certain commentary in different categories. These posts are flaggable, and administration both takes note of posts that are considered irrelevant or offensive but also popular commentary and makes sure the flow of feedback is clean and effective. Ideally, an executive team should review posts to affect positive change for their employees.
